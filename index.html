@@ -112,7 +112,7 @@
 				.map(element => {
 					const button = document.createElement('button');
 					button.textContent = `(${element.stateMutability}) ${element.name}`;
-					button.onclick = (e) => handleClick(e, element.stateMutability === 'view');
+					button.onclick = (e) => handleClick(e, element.stateMutability === 'view', element.stateMutability === 'payable');
 
 					const group = document.createElement('div');
 					group.setAttribute("class", "group");
@@ -127,6 +127,13 @@
 						const inputText = document.createElement('input');
 						inputText.setAttribute("type", "text");
 						inputText.setAttribute("placeholder", `${input.type} ${input.name}`);
+						group.appendChild(inputText);
+					}
+
+					if(element.stateMutability === 'payable') {
+						const inputText = document.createElement('input');
+						inputText.setAttribute("type", "text");
+						inputText.setAttribute("placeholder", `msg.value`);
 						group.appendChild(inputText);
 					}
 
@@ -145,7 +152,7 @@
 			}
 		});
 
-		async function handleClick(event, isCallFnc) {
+		async function handleClick(event, isCallFnc, isPayable) {
 			const button = event.target;
 			console.log(button)
 
@@ -159,7 +166,7 @@
 			console.log("functionName: ", functionName);
 
 			const contractMethod = contract.methods[functionName](...args);
-			const result = await contractMethod[isCallFnc ? "call" : "send"]({ from: address });
+			const result = await contractMethod[isCallFnc ? "call" : "send"](isPayable ? { from: address, value: 0 } : { from: address });
 
 			console.log("result: ", result)
 
