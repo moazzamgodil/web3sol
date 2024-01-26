@@ -164,8 +164,8 @@
 			console.log("result: ", result)
 
 			const displaySpan = children[children.length - 1];
-
-			displaySpan.innerText = JSON.stringify(result);
+			const res = JSON.stringify(result);
+			displaySpan.innerText = res.replaceAll("{", "{\n\t").replaceAll(",", "\n\t").replaceAll("}", "\n}\n");
 		}
 
 		const web3form = document.getElementById("web3details");
@@ -191,4 +191,5 @@
 	</script>
 
 </body>
+
 </html>
