@@ -312,9 +312,10 @@ async function handleClick(event, isCallFnc, isPayable) {
     try {
         displaySpan.innerText = "Loading...";
         const contractMethod = contract.methods[functionName](...args);
-        await contractMethod.estimateGas({ from: address });
+        const fromData = isPayable ? { from: address, value: msgValue[0].value } : { from: address };
+        await contractMethod.estimateGas(fromData);
 
-        result = await contractMethod[isCallFnc ? "call" : "send"](isPayable ? { from: address, value: msgValue[0].value } : { from: address });
+        result = await contractMethod[isCallFnc ? "call" : "send"](fromData);
 
     } catch (error) {
         err = await getErrorMessage(error);
