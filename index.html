@@ -7,12 +7,23 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="author" content="Moazzam Ahmed">
 	<title>Function Calls from EVM based smart contract</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.5/web3.min.js"
-		integrity="sha512-/T7YwzOsNeoNkuTfYKXn3CrJCGc5cnC8T4QW46Hy+3Xjdjrxzokmbx8M8Xavjq1K7dN4958kIRGy4J03VRIlSg=="
-		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+	<a href="https://github.com/moazzamgodil" class="github-corner" aria-label="View source on GitHub"><svg width="80"
+		height="80" viewBox="0 0 250 250"
+		style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+		<path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+		<path
+			d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+			fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+		<path
+			d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+			fill="currentColor" class="octo-body"></path>
+	</svg></a>
+	
 	<div>
 		<h1>Function Calls from EVM based smart contract</h1>
 		<h4 id="metamask_msg">Required metamask for transactions</h4>
@@ -20,360 +31,37 @@
 		<fieldset>
 			<legend>Web3 & Contract Details</legend>
 			<form id="web3details" method="post">
-				<label for="web3rpc">Network RPC</label>
-				<input type="text" name="web3rpc" id="web3rpc">
-				<label for="contractaddress">Contract Address</label>
-				<input type="text" name="contractaddress" id="contractaddress">
-				<br>
-				<br>
-				<label for="contractaddress">Contract ABI</label>
-				<textarea name="abi" id="abi" rows="20" cols="50"></textarea>
-				<br>
-				<br>
+				<div>
+					<label for="web3rpc">Network RPC</label>
+					<input type="text" name="web3rpc" id="web3rpc">
+				</div>
+				<div>
+					<label for="contractaddress">Contract Address</label>
+					<input type="text" name="contractaddress" id="contractaddress">
+				</div>
+				<div>
+					<label for="contractaddress">Contract ABI</label>
+					<textarea name="abi" id="abi" rows="20" cols="50"></textarea>
+				</div>
 				<button type="submit">Update</button>
 			</form>
 		</fieldset>
 		<br>
 		<fieldset id="container">
 			<legend>Functions Calls</legend>
-			<p>Type</p>
+			<p class="heading">Type</p>
 			<ul>
 				<li>nonpayable -> Send Function without passing native token or msg.value</li>
 				<li>payable -> Send Function with native token or msg.value</li>
-				<li>view -> Call Function</li>
+				<li>view | pure -> Call Function</li>
 			</ul>
 		</fieldset>
 	</div>
 
-
-	<script>
-		let contract;
-		let address;
-		let web3;
-
-		const connectwalletBtn = document.getElementById("connectwallet");
-		const metamask_msg = document.getElementById("metamask_msg");
-
-		const connect = async () => {
-			if (window.ethereum) {
-				web3 = new Web3(window.ethereum);
-				try {
-					// Request account access if needed
-					const accounts = await window.ethereum.request({
-						"method": "eth_requestAccounts",
-						"params": []
-					});
-					address = accounts[0];
-					console.log(address)
-
-					window.ethereum.on("accountsChanged", async (accounts) => {
-						address = accounts[0];
-						console.log(address)
-						metamask_msg.innerHTML = address ? `Metamask Connected (${address})` : "Required metamask for transactions. Metamask Not Connected";
-						connectwalletBtn.style.display = address ? "none" : "block";
-					});
-
-					metamask_msg.innerHTML = `Required metamask for transactions. Metamask Connected (${address})`;
-					connectwalletBtn.style.display = "none";
-				} catch (error) {
-					metamask_msg.innerHTML = "Required metamask for transactions. Metamask Not Connected";
-					connectwalletBtn.style.display = "block";
-					console.log(error)
-				}
-			} else {
-				console.log(
-					'Non-Ethereum browser detected. You should consider trying MetaMask!'
-				);
-			}
-		}
-
-		window.addEventListener('load', async () => {
-
-			const abi = JSON.parse(window.localStorage.getItem('abi'));
-			const contractaddress = window.localStorage.getItem('contractaddress');
-			const rpc = window.localStorage.getItem('rpc');
-			if (rpc) {
-				web3 = new Web3(rpc);
-			}
-
-			document.getElementById("web3rpc").value = rpc;
-			document.getElementById("contractaddress").value = contractaddress;
-			document.getElementById("abi").value = JSON.stringify(abi, null, 2);
-
-			await connect();
-
-			if (!abi || !contractaddress || !web3) {
-				return;
-			}
-
-			contract = new web3.eth.Contract(abi, contractaddress);
-
-			const groups = abi.filter(element => element.type === 'function')
-				.map(element => {
-					const button = document.createElement('button');
-					button.textContent = `(${element.stateMutability}) ${element.name}`;
-					button.onclick = (e) => handleClick(e, element.stateMutability === 'view', element.stateMutability === 'payable');
-
-					const group = document.createElement('div');
-					group.setAttribute("class", "group");
-
-					const brEle = document.createElement('br');
-					const brEle2 = document.createElement('br');
-					group.appendChild(brEle);
-					group.appendChild(button);
-
-					for (let i = 0; i < element.inputs.length; i++) {
-						const input = element.inputs[i];
-						const inputText = document.createElement('input');
-						inputText.setAttribute("type", "text");
-						inputText.setAttribute("placeholder", `${input.type} ${input.name}`);
-						group.appendChild(inputText);
-					}
-
-					if (element.stateMutability === 'payable') {
-						const inputText = document.createElement('input');
-						inputText.setAttribute("type", "text");
-						inputText.setAttribute("placeholder", `msg.value`);
-						group.appendChild(inputText);
-					}
-
-					const display = document.createElement('span');
-
-					group.appendChild(brEle2);
-					group.appendChild(display);
-					return group;
-
-				});
-
-			const container = document.getElementById("container");
-
-			for (let i = 0; i < groups.length; i++) {
-				container.appendChild(groups[i]);
-			}
-		});
-
-		const METAMASK_POSSIBLE_ERRORS = {
-			'-32700': {
-				standard: 'JSON RPC 2.0',
-				message: 'Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text.',
-			},
-			'-32600': {
-				standard: 'JSON RPC 2.0',
-				message: 'The JSON sent is not a valid Request object.',
-			},
-			'-32601': {
-				standard: 'JSON RPC 2.0',
-				message: 'The method does not exist / is not available.',
-			},
-			'-32602': {
-				standard: 'JSON RPC 2.0',
-				message: 'Invalid method parameter(s).',
-			},
-			'-32603': {
-				standard: 'JSON RPC 2.0',
-				message: 'Internal JSON-RPC error.',
-			},
-			'-32000': {
-				standard: 'EIP-1474',
-				message: 'Invalid input or Insufficient Funds.',
-			},
-			'-32001': {
-				standard: 'EIP-1474',
-				message: 'Resource not found.',
-			},
-			'-32002': {
-				standard: 'EIP-1474',
-				message: 'Resource unavailable.',
-			},
-			'-32003': {
-				standard: 'EIP-1474',
-				message: 'Transaction rejected.',
-			},
-			'-32004': {
-				standard: 'EIP-1474',
-				message: 'Method not supported.',
-			},
-			'-32005': {
-				standard: 'EIP-1474',
-				message: 'Request limit exceeded.',
-			},
-			'4001': {
-				standard: 'EIP-1193',
-				message: 'User rejected the request.',
-			},
-			'4100': {
-				standard: 'EIP-1193',
-				message: 'The requested account and/or method has not been authorized by the user.',
-			},
-			'4200': {
-				standard: 'EIP-1193',
-				message: 'The requested method is not supported by this Ethereum provider.',
-			},
-			'4900': {
-				standard: 'EIP-1193',
-				message: 'The provider is disconnected from all chains.',
-			},
-			'4901': {
-				standard: 'EIP-1193',
-				message: 'The provider is disconnected from the specified chain.',
-			},
-			'4902': {
-				standard: 'EIP-1193',
-				message: 'Unrecognized Chain ID / Chain not found.',
-			},
-		}
-
-		const getErrFromWeb3 = async (err) => {
-			const defaultErrMsg = "Something went wrong. Please try again later.";
-			if (err && err?.code) {
-				if (METAMASK_POSSIBLE_ERRORS[err.code]) {
-					return METAMASK_POSSIBLE_ERRORS[err.code].message;
-				} else if (err.code === "ACTION_REJECTED") {
-					return "User rejected signing";
-				} else {
-					return err.message;
-				}
-			}
-			let chkErr = err?.toString();
-			if (
-				chkErr &&
-				chkErr?.startsWith("Error: Transaction has been reverted by the EVM:")
-			) {
-				const errorObjectStr = err.message.slice(42);
-				const errorObject = JSON.parse(errorObjectStr);
-				let txHash = errorObject.transactionHash;
-				try {
-					const tx = await web3.eth.getTransaction(txHash);
-					var result = await web3.eth.call(tx);
-					result = result.startsWith("0x") ? result : `0x${result}`;
-					if (result && result.substring(138)) {
-						const reason = web3.utils.toAscii(result.substring(138));
-						console.log("Revert reason:", reason);
-						return reason;
-					} else {
-						console.log("Cannot get reason");
-					}
-				} catch (e) {
-					var errMsg2 = e.toString();
-					if (errMsg2) {
-						if (errMsg2.startsWith("Error")) {
-							var errObj2 = errMsg2.slice(errMsg2.indexOf("{"), errMsg2.length);
-							if (errObj2.indexOf("{") !== -1 && errObj2.lastIndexOf("}")) {
-								errObj2 = JSON.parse(errObj2);
-								return errObj2.message;
-							}
-						}
-						console.log(errMsg2);
-					}
-					console.log(err);
-					return defaultErrMsg;
-				}
-			} else {
-				console.log(err);
-				return defaultErrMsg;
-			}
-		};
-
-		const getErrorMessage = async (err) => {
-			const defaultErrMsg = "Something went wrong. Please try again later.";
-			if (err?.message && err.message?.includes("Internal JSON-RPC error.")) {
-				let errMsg = err.message;
-				if (typeof err.message !== "string") {
-					errMsg = err.message.toString();
-				}
-				var errObj = errMsg.slice(errMsg.indexOf("{"), errMsg.length);
-				if (errObj.indexOf("{") !== -1 && errObj.lastIndexOf("}")) {
-					errObj = JSON.parse(errObj);
-					const _errFromWeb3 = await getErrFromWeb3(errObj);
-					return _errFromWeb3;
-				}
-			} else if (
-				err?.message &&
-				err.message?.includes("execution reverted:") &&
-				err.message?.indexOf("{") !== -1
-			) {
-				let jsonObj = JSON.parse(
-					err.message.slice(
-						err.message.indexOf("{"),
-						err.message.lastIndexOf("}") + 1
-					)
-				);
-				if (jsonObj?.originalError) {
-					return jsonObj.originalError.message;
-				}
-				return jsonObj;
-			} else if (err?.message && err.message?.includes("execution reverted:")) {
-				return err.message.slice(
-					err.message.indexOf("execution reverted:"),
-					err.message.length
-				);
-			}
-			const errFromWeb3 = getErrFromWeb3(err, chainId);
-			if (errFromWeb3) {
-				return errFromWeb3;
-			}
-			return defaultErrMsg;
-		};
-
-		async function handleClick(event, isCallFnc, isPayable) {
-			const button = event.target;
-			console.log(button)
-
-			const children = [...button.parentNode.children];
-			const inputs = children.filter(element => element.nodeName === 'INPUT');
-
-			const argsFilter = inputs.filter(input => input.placeholder !== "msg.value");
-			const msgValue = inputs.filter(input => input.placeholder === "msg.value");
-
-			const args = argsFilter.map(input => input.value);
-
-			const buttonText = button.innerText;
-			const functionName = buttonText.slice(buttonText.indexOf(")") + 1, buttonText.length).trim();
-			console.log("functionName: ", functionName);
-
-			const displaySpan = children[children.length - 1];
-			displaySpan.innerText = "";
-			
-			let result;
-			try {
-				displaySpan.innerText = "Loading...";
-				const contractMethod = contract.methods[functionName](...args);
-				await contractMethod.estimateGas({ from: address });
-
-				result = await contractMethod[isCallFnc ? "call" : "send"](isPayable ? { from: address, value: msgValue[0].value } : { from: address });
-	
-			} catch (error) {
-				result = await getErrorMessage(error);
-			}
-			
-			console.log("result: ", result)
-			
-			const res = JSON.stringify(result);
-			displaySpan.innerText = res.replaceAll("{", "{\n\t").replaceAll(",", "\n\t").replaceAll("}", "\n}\n");
-		}
-
-		const web3form = document.getElementById("web3details");
-		web3form.addEventListener("submit", async (event) => {
-			event.preventDefault();
-			const formData = new FormData(web3form);
-			const rpc = formData.get("web3rpc");
-			const contractaddress = formData.get("contractaddress");
-			const abi = formData.get("abi");
-
-			window.localStorage.setItem('rpc', rpc);
-			window.localStorage.setItem('contractaddress', contractaddress);
-			window.localStorage.setItem('abi', abi);
-
-			window.location.reload();
-		});
-
-		connectwalletBtn.addEventListener("click", async (event) => {
-			event.preventDefault();
-			await connect();
-		});
-
-	</script>
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.5/web3.min.js"
+		integrity="sha512-/T7YwzOsNeoNkuTfYKXn3CrJCGc5cnC8T4QW46Hy+3Xjdjrxzokmbx8M8Xavjq1K7dN4958kIRGy4J03VRIlSg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="script.js"></script>
 </body>
 
 </html>
