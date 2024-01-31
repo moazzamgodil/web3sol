@@ -323,7 +323,7 @@ async function handleClick(event, isCallFnc, isPayable) {
 
     console.log("result: ", result);
 
-    if(result) {
+    if(typeof result === "boolean" || result) {
         const res = JSON.stringify(result);
         result = res.replaceAll("{", "{\n\t").replaceAll(",", ",\n\t").replaceAll("}", "\n}\n");
     } else {
