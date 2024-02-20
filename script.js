@@ -1,9 +1,12 @@
 let contract;
 let address;
+let userBalance;
 let web3;
 
 const connectwalletBtn = document.getElementById("connectwallet");
 const metamask_msg = document.getElementById("metamask_msg");
+const network_id = document.getElementById("network_id");
+const contract_balance = document.getElementById("contract_balance");
 
 const connect = async () => {
     if (window.ethereum) {
@@ -16,16 +19,25 @@ const connect = async () => {
                 "params": []
             });
             address = accounts[0];
+            userBalance = await web3.eth.getBalance(address);
             console.log(address)
 
             window.ethereum.on("accountsChanged", async (accounts) => {
                 address = accounts[0];
+                userBalance = await web3.eth.getBalance(address);
                 console.log(address)
-                metamask_msg.innerHTML = address ? `Metamask Connected (${address})` : "Required metamask for transactions. Metamask Not Connected";
+                metamask_msg.innerHTML = address ? `Metamask Connected (${address}) (${userBalance / 10 ** 18} eth)` : "Required metamask for transactions. Metamask Not Connected";
                 connectwalletBtn.style.display = address ? "none" : "block";
             });
 
-            metamask_msg.innerHTML = `Metamask Connected (${address})`;
+            const chainid = await window.ethereum.request({
+                "method": "eth_chainId",
+                "params": []
+            });
+
+            network_id.innerHTML = `Network ID: ${parseInt(chainid)}`;
+
+            metamask_msg.innerHTML = `Metamask Connected (${address}) (${userBalance / 10 ** 18} eth)`;
             connectwalletBtn.innerText = "Connect Metamask";
             connectwalletBtn.style.display = "none";
         } catch (error) {
@@ -52,7 +64,7 @@ window.addEventListener('load', async () => {
 
     document.getElementById("web3rpc").value = rpc;
     document.getElementById("contractaddress").value = contractaddress;
-    document.getElementById("abi").value = JSON.stringify(abi, null, 2);
+    document.getElementById("abi").value = abi ? JSON.stringify(abi, null, 2) : "";
 
     await connect();
 
@@ -61,6 +73,7 @@ window.addEventListener('load', async () => {
     }
 
     contract = new web3.eth.Contract(abi, contractaddress);
+    contract_balance.innerHTML = `Contract Balance: ${await web3.eth.getBalance(contractaddress) / 10 ** 18} eth`;
 
     const groups = abi.filter(element => element.type === 'function')
         .map(element => {
@@ -292,15 +305,15 @@ async function handleClick(event, isCallFnc, isPayable) {
     const args = argsFilter.map(input => {
         if (!input.placeholder.includes("string") && input.value == "") {
             required = true;
-        } else if(input.value.includes('\"')) {
+        } else if (input.value.includes('\"') || input.value.includes('[') || input.value.includes(']')) {
             return JSON.parse(input.value);
         }
         return input.value;
     });
 
     console.log(args)
-    
-    if(required) {
+
+    if (required) {
         displaySpan.innerText = "Error: Please enter all required fields";
         displaySpan.style.color = "red";
         displaySpan.style.fontWeight = "bold";
@@ -327,7 +340,7 @@ async function handleClick(event, isCallFnc, isPayable) {
 
     console.log("result: ", result);
 
-    if(typeof result === "boolean" || result) {
+    if (typeof result === "boolean" || result) {
         const res = JSON.stringify(result);
         result = res.replaceAll("{", "{\n\t").replaceAll(",", ",\n\t").replaceAll("}", "\n}\n");
     } else {
