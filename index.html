@@ -34,7 +34,7 @@
 				<label for="contract_list">Select Saved Contracts</label><br>
 				<div>
 					<select id="contract_list"></select>
-					<button id="delete_contract">Delete</button>
+					<button id="delete_contract" style="display: none;">Delete</button>
 				</div>
 			</div>
 
@@ -50,6 +50,8 @@
 					<div>
 						<label for="chainid">Chain ID / Network ID</label>
 						<input type="text" name="chainid" id="chainid" placeholder="1">
+						<p id="chain-error" style="color: red; font-size: 12px; font-weight: bold; display: none;">
+							Wrong network connected. <span id="switch-network" style="text-decoration: underline; font-weight: bold; cursor: pointer;">Switch Network</span></p>
 					</div>
 					<div>
 						<label for="contractaddress">Contract Address</label>

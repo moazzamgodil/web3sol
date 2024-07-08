@@ -67,9 +67,9 @@ window.addEventListener('load', async () => {
             contractsArray.forEach((contract) => {
                 const name = data[contract]?.savename || "Unknown Name";
                 const chain = data[contract]?.chainid || "Unknown Chain";
-                contract_list.innerHTML += `<option value=${contract}>${contract} (${name}) (${chain})</option>`;
+                contract_list.innerHTML += `<option value=${contract}>(${name}) (Chain ID: ${chain}) ${contract}</option>`;
             })
-            document.querySelector("#contract_list_div").style.display = "block";
+            deletecontract.style.display = "inline-block";
         } else {
             contract_list.innerHTML += `<option disabled value="">No Saved Contracts</option>`;
         }
@@ -94,28 +94,28 @@ window.addEventListener('load', async () => {
 
         let requiredEmpty = [];
 
-        if(!_contractaddress) {
+        if (!_contractaddress) {
             requiredEmpty.push("Contract Address");
         }
 
-        if(!_abi) {
+        if (!_abi) {
             requiredEmpty.push("ABI");
         }
 
-        if(!_savename) {
+        if (!_savename) {
             requiredEmpty.push("Name");
         }
 
-        if(!_chainid) {
+        if (!_chainid) {
             requiredEmpty.push("Chain ID");
         }
 
-        if(requiredEmpty.length > 0) {
-            if(requiredEmpty.length > 1) {
+        if (requiredEmpty.length > 0) {
+            if (requiredEmpty.length > 1) {
                 requiredEmpty.push(requiredEmpty[requiredEmpty.length - 1]);
                 requiredEmpty[requiredEmpty.length - 2] = "and";
             }
-            
+
             alert(`${requiredEmpty.join(", ")} are required fields.`);
             return;
         }
@@ -160,10 +160,26 @@ window.addEventListener('load', async () => {
                     connectwalletBtn.style.display = address ? "none" : "block";
                 });
 
+                window.ethereum.on("chainChanged", () => window.location.reload());
+
                 const networkid = await window.ethereum.request({
                     "method": "eth_chainId",
                     "params": []
                 });
+
+                if(chainid != "" && chainid != parseInt(networkid)) {
+                    document.querySelector("#chain-error").style.display = "block";
+                    document.querySelector("#switch-network").addEventListener("click", async () => {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: "0x" + Number(chainid).toString(16) }], // chainId must be in hexadecimal numbers
+                        });
+                    });
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: "0x" + Number(chainid).toString(16) }], // chainId must be in hexadecimal numbers
+                    });
+                }
 
                 network_id.innerHTML = `Network ID: ${parseInt(networkid)}`;
                 console.log("Chain ID: ", parseInt(networkid));
@@ -317,7 +333,7 @@ window.addEventListener('load', async () => {
 
         console.log("result: ", result);
 
-        if (typeof result === "boolean" || result) {
+        if (result || parseInt(result) == 0) {
             delete result["__length__"];
             const res = JSON.stringify(result, null, 4);
             result = res;
