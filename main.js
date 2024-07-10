@@ -84,7 +84,7 @@ window.addEventListener('load', async () => {
             return;
         }
 
-        const { contractsArray, data } = localLevel;
+        let { contractsArray, data } = localLevel;
 
         const getSelectedIndex = getDataFromLocalStorage("index");
         if (getSelectedIndex == contractsArray?.indexOf(contractaddress)) {
