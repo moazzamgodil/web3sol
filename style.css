@@ -2,10 +2,10 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: monospace;
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   color: #333;
@@ -16,12 +16,37 @@ body {
 h1,
 h4 {
   margin-bottom: 10px;
+} 
+
+div.parent-container {
+  display: flex;
+  gap: 15px;
 }
 
 fieldset {
   padding: 10px;
   border: 1px solid black;
   margin-bottom: 10px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+fieldset:nth-child(1) {
+  width: 40%;
+}
+
+fieldset:nth-child(2) {
+  width: 60%;
+}
+
+@media only screen and (max-width: 768px) {
+  div.parent-container {
+    flex-wrap: wrap;
+  }
+  fieldset {
+    width: 100% !important;
+  }
 }
 
 legend {
@@ -34,14 +59,17 @@ legend {
 }
 
 #web3details label {
-  display: inline-block;
-  width: 350px;
+  display: block;
 }
 
 #web3details input, #web3details textarea, #web3details select, select#contract_list {
   padding: 10px;
   border: 1px solid black;
   width: 600px;
+}
+
+#web3details input, #web3details textarea {
+  width: 100%;
 }
 
 #web3details button, #delete_contract {
@@ -111,13 +139,13 @@ p.heading {
 
 .group {
   padding: 20px 15px;
-  border: 1px solid black;
+  border-top: 1px solid black;
 }
 
 .inputdata {
   padding: 10px;
   border: 1px solid black;
-  margin: 0 0 5px 5px;
+  margin: 5px 0 5px 5px;
   border-radius: 5px;
 }
 
@@ -140,6 +168,16 @@ p.heading {
 
 .github-corner:hover .octo-arm {
   animation: octocat-wave 560ms ease-in-out
+}
+
+.foot {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+}
+
+.foot a {
+  color: black;
 }
 
 @keyframes octocat-wave {
