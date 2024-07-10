@@ -33,6 +33,7 @@ fieldset {
 }
 
 fieldset:nth-child(1) {
+  min-width: 40vw;
   width: 40%;
 }
 
