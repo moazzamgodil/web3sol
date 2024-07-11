@@ -21,38 +21,44 @@ h4 {
 div.parent-container {
   display: flex;
   gap: 15px;
+  margin-bottom: 30px;
 }
 
-fieldset {
+h3 {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid black; 
+}
+
+.fieldset {
+  margin-bottom: 10px;
   padding: 10px;
   border: 1px solid black;
-  margin-bottom: 10px;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
-fieldset:nth-child(1) {
+.fieldset:nth-child(1) {
   min-width: 40vw;
   width: 40%;
 }
 
-fieldset:nth-child(2) {
+.fieldset:nth-child(2) {
   width: 60%;
+}
+
+.block {
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
 }
 
 @media only screen and (max-width: 768px) {
   div.parent-container {
     flex-wrap: wrap;
   }
-  fieldset {
+  .fieldset {
     width: 100% !important;
   }
-}
-
-legend {
-  padding: 0 5px;
-  font-weight: bold;
 }
 
 #web3details div {
@@ -172,9 +178,15 @@ p.heading {
 }
 
 .foot {
-  width: 100%;
+  width: calc(100% - 20px);
   text-align: center;
   font-size: 18px;
+  position: fixed;
+  bottom: 0;
+  left: 10px;
+  padding: 15px;
+  background: #f4f4f4;
+  border-top: 1px solid;
 }
 
 .foot a {
