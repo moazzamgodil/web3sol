@@ -39,7 +39,13 @@ const getFromLocalStorage = async () => {
     localLevel.data = data;
     localLevel.contractsArray = contractsArray;
 
-    const contractaddress = contractsArray.length > 0 ? contractsArray[getSelectedIndex || 0] : "";
+    let index = getSelectedIndex;
+    if(index >= contractsArray.length && contractsArray.length > 0) {
+        setDataToLocalStorage("index", contractsArray.length - 1);
+        index = contractsArray.length - 1;
+    }
+
+    const contractaddress = contractsArray.length > 0 ? contractsArray[index || 0] : "";
     const abi = data?.[contractaddress] ? JSON.parse(data[contractaddress]?.abi) : "";
     const rpc = data?.[contractaddress] ? data[contractaddress]?.rpc : "";
     const savename = data?.[contractaddress] ? data[contractaddress]?.savename : "";
@@ -50,7 +56,7 @@ const getFromLocalStorage = async () => {
     selectedLevel.rpc = rpc;
     selectedLevel.savename = savename;
     selectedLevel.chainid = chainid;
-    
+
     contract_list.value = contractaddress;
 
     await settingWeb3(selectedLevel);
@@ -92,7 +98,7 @@ window.addEventListener('load', async () => {
         }
 
         delete data[contractaddress];
-        contractsArray = contractsArray.filter(contract => contract !== cAddress);
+        contractsArray = contractsArray.filter(contract => contract !== contractaddress);
         setDataToLocalStorage("contracts", JSON.stringify(contractsArray));
         setDataToLocalStorage("data", JSON.stringify(data));
         reloadWindow();
@@ -151,7 +157,7 @@ window.addEventListener('load', async () => {
 
     connectwalletBtn.addEventListener("click", async (event) => {
         event.preventDefault();
-        const {abi, chainid} = selectedLevel;
+        const { abi, chainid } = selectedLevel;
         await connect(abi, chainid);
     });
 
