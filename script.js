@@ -138,7 +138,7 @@ export const connect = async (abi, chainid) => {
     connectwalletBtn.innerText = "Connecting...";
 
     switch_network.addEventListener("click", async () => {
-        await wallet_switchEthereumChain();
+        await wallet_switchEthereumChain(chainid);
     });
 
     try {
@@ -164,7 +164,7 @@ export const connect = async (abi, chainid) => {
 
         if (chainid != "" && chainid != parseInt(networkid)) {
             chain_error.style.display = "block";
-            await wallet_switchEthereumChain();
+            await wallet_switchEthereumChain(chainid);
         }
 
         network_id.innerHTML = `Network ID: ${parseInt(networkid)}`;
