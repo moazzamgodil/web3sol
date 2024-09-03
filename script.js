@@ -101,7 +101,7 @@ const handleClick = async (event, isCallFnc, isPayable) => {
 
     console.log("result: ", result);
 
-    if (result || parseInt(result) == 0) {
+    if (result || parseInt(result) == 0 || typeof result == "boolean") {
         delete result["__length__"];
         const res = JSON.stringify(result, null, 4);
         result = res;
