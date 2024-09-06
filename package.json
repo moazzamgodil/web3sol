@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "web3": "^4.9.0",
-    "web3-errors-extract": "^0.2.1"
+    "web3-errors-extract": "^0.2.2"
   }
 }
