@@ -11,6 +11,21 @@ body {
   color: #333;
   background-color: #f4f4f4;
   padding: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+#load {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 h1,
@@ -72,14 +87,18 @@ h3 {
 #web3details input, #web3details textarea, #web3details select, select#contract_list {
   padding: 10px;
   border: 1px solid black;
-  width: 600px;
-}
-
-#web3details input, #web3details textarea {
   width: 100%;
+  max-width: 600px;
 }
 
-#web3details button, #delete_contract {
+input:disabled, textarea:disabled {
+  cursor: not-allowed;
+}
+
+/* #web3details input, #web3details textarea {
+} */
+
+#web3details button, #delete_contract, #select_contract {
   padding: 10px 20px;
   color: white;
   border-width: 1px;
@@ -88,6 +107,13 @@ h3 {
   border-color: black;
   width: 150px;
   border-radius: 5px;
+  cursor: pointer;
+}
+
+#web3details button:disabled, #delete_contract:disabled, #select_contract:disabled {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 0, 0, 0.3);
+  cursor: not-allowed;
 }
 
 ul {
@@ -132,16 +158,19 @@ p.heading {
 .callbtn {
   background-color: darkblue;
   border-color: darkblue;
+  cursor: pointer;
 }
 
 .nonpaybtn {
   background-color: orange;
   border-color: orange;
+  cursor: pointer;
 }
 
 .paybtn {
   background-color: red;
   border-color: red;
+  cursor: pointer;
 }
 
 .group {

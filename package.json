@@ -1,7 +1,7 @@
 {
   "name": "web3sol",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "web3": "^4.9.0",
+    "web3-bignumber": "^0.1.2",
     "web3-errors-extract": "^0.2.2"
   }
 }

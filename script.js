@@ -1,6 +1,6 @@
 
 import Web3 from 'web3';
-import { web3Number } from './web3Number';
+import { Web3BigNumber } from 'web3-bignumber';
 import { Web3errors } from 'web3-errors-extract';
 
 BigInt.prototype.toJSON = function () {
@@ -116,7 +116,7 @@ const handleClick = async (event, isCallFnc, isPayable) => {
     displaySpan.innerText = result || err;
 }
 
-export const connect = async (abi, chainid) => {
+export const connect = async (abi, chainid, rpc) => {
     const connectwalletBtn = document.querySelector("#connectwallet");
     const metamask_msg = document.querySelector("#metamask_msg");
     const rpc_error = document.querySelector("#rpc-error");
@@ -124,7 +124,7 @@ export const connect = async (abi, chainid) => {
     const switch_network = document.querySelector("#switch-network");
     const network_id = document.querySelector("#network_id");
 
-    if (!window.ethereum) {
+    if (!window.ethereum && !rpc) {
         metamask_msg.innerHTML = 'Non-Ethereum browser detected. Required metamask for transactions or connect to rpc url';
         rpc_error.style.display = "block";
         console.log(
@@ -151,7 +151,7 @@ export const connect = async (abi, chainid) => {
             address = accounts[0];
             userBalance = await web3.eth.getBalance(address);
             console.log("Connected: ", address)
-            metamask_msg.innerHTML = address ? `Metamask Connected (${address}) (${web3Number(userBalance)} eth)` : "Required metamask for transactions. Metamask Not Connected";
+            metamask_msg.innerHTML = address ? `Metamask Connected (${address?.substring(0, 5)}...${address?.substring(address.length - 5, address.length)}) (${Web3BigNumber(userBalance).toSmall().trimDecimalPlaces(2)} eth)` : "Required metamask for transactions. Metamask Not Connected";
             connectwalletBtn.style.display = address ? "none" : "block";
         });
 
@@ -170,7 +170,7 @@ export const connect = async (abi, chainid) => {
         network_id.innerHTML = `Network ID: ${parseInt(networkid)}`;
         console.log("Chain ID: ", parseInt(networkid));
 
-        metamask_msg.innerHTML = `Metamask Connected (${address}) (${web3Number(userBalance)} eth)`;
+        metamask_msg.innerHTML = `Metamask Connected (${address?.substring(0, 6)}...${address?.substring(address.length - 4, address.length)}) (${Web3BigNumber(userBalance).toSmall().trimDecimalPlaces(2)} eth)`;
         connectwalletBtn.innerText = "Connect Metamask";
         connectwalletBtn.style.display = "none";
 
@@ -223,7 +223,7 @@ export const settingWeb3 = async (selectedLevel) => {
     input_savename.value = savename || "";
     input_chainid.value = chainid || "";
 
-    await connect(abi, chainid);
+    await connect(abi, chainid, rpc);
 
     if (!abi || !contractaddress || !web3) {
         return;
@@ -233,7 +233,7 @@ export const settingWeb3 = async (selectedLevel) => {
     topLevel.web3Errors = web3Errors;
     topLevel.contract = new web3.eth.Contract(abi, contractaddress);
     const contractBalance = await web3.eth.getBalance(contractaddress);
-    contract_balance.innerHTML = `Contract Balance: ${web3Number(contractBalance)} eth`;
+    contract_balance.innerHTML = `Contract Balance: ${Web3BigNumber(contractBalance).toSmall().trimDecimalPlaces(2)} eth`;
 
     const groups = abi.filter(element => element.type === 'function')
         .map(element => {
