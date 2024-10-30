@@ -20,9 +20,16 @@ body {
   left: 0;
   top: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 9999;
+}
+
+#load span {
+  font-size: 26px;
+  color: #ffffff;
+  width: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,7 +38,7 @@ body {
 h1,
 h4 {
   margin-bottom: 10px;
-} 
+}
 
 div.parent-container {
   display: flex;
@@ -42,7 +49,7 @@ div.parent-container {
 h3 {
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid black; 
+  border-bottom: 1px solid black;
 }
 
 .fieldset {
@@ -71,6 +78,7 @@ h3 {
   div.parent-container {
     flex-wrap: wrap;
   }
+
   .fieldset {
     width: 100% !important;
   }
@@ -84,21 +92,27 @@ h3 {
   display: block;
 }
 
-#web3details input, #web3details textarea, #web3details select, select#contract_list {
+#web3details input,
+#web3details textarea,
+#web3details select,
+select#contract_list {
   padding: 10px;
   border: 1px solid black;
   width: 100%;
   max-width: 600px;
 }
 
-input:disabled, textarea:disabled {
+input:disabled,
+textarea:disabled {
   cursor: not-allowed;
 }
 
 /* #web3details input, #web3details textarea {
 } */
 
-#web3details button, #delete_contract, #select_contract {
+#web3details button,
+#delete_contract,
+#select_contract {
   padding: 10px 20px;
   color: white;
   border-width: 1px;
@@ -110,7 +124,9 @@ input:disabled, textarea:disabled {
   cursor: pointer;
 }
 
-#web3details button:disabled, #delete_contract:disabled, #select_contract:disabled {
+#web3details button:disabled,
+#delete_contract:disabled,
+#select_contract:disabled {
   background-color: rgba(0, 0, 0, 0.3);
   border-color: rgba(0, 0, 0, 0.3);
   cursor: not-allowed;
@@ -223,22 +239,29 @@ p.heading {
 }
 
 @keyframes octocat-wave {
-  0%, 100% {
-      transform: rotate(0)
+
+  0%,
+  100% {
+    transform: rotate(0)
   }
-  20%, 60% {
-      transform: rotate(-25deg)
+
+  20%,
+  60% {
+    transform: rotate(-25deg)
   }
-  40%, 80% {
-      transform: rotate(10deg)
+
+  40%,
+  80% {
+    transform: rotate(10deg)
   }
 }
 
 @media (max-width:500px) {
   .github-corner:hover .octo-arm {
-      animation: none
+    animation: none
   }
+
   .github-corner .octo-arm {
-      animation: octocat-wave 560ms ease-in-out
+    animation: octocat-wave 560ms ease-in-out
   }
 }

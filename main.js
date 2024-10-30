@@ -14,10 +14,28 @@ const localLevel = {
     contractsArray: null
 }
 
+
+
+const connectwalletBtn = document.querySelector("#connectwallet");
+const web3form = document.querySelector("#web3details");
+const contract_list = document.querySelector("#contract_list");
+const select_contract = document.querySelector("#select_contract");
+const deletecontract = document.querySelector("#delete_contract");
+const formbtn = document.querySelector("#formbtn");
+const editbtn = document.querySelector("#editbtn");
+const addnewbtn = document.querySelector("#addnewbtn");
+
+// FORM FIELDS
+const input_web3rpc = document.getElementById("web3rpc");
+const input_contractaddress = document.getElementById("contractaddress");
+const input_abi = document.getElementById("abi");
+const input_savename = document.getElementById("savename");
+const input_chainid = document.getElementById("chainid");
+
+const docLoad = document.querySelector("#load");
+const docBody = document.querySelector("body");
+
 const getFromLocalStorage = async () => {
-    const contract_list = document.querySelector("#contract_list");
-    const deletecontract = document.querySelector("#delete_contract");
-    const select_contract = document.querySelector("#select_contract");
 
     const getData = getDataFromLocalStorage("data");
     const getContractsArray = getDataFromLocalStorage("contracts");
@@ -63,13 +81,6 @@ const getFromLocalStorage = async () => {
     contract_list.value = contractaddress;
 
     if (contractaddress != "") {
-        const input_web3rpc = document.getElementById("web3rpc");
-        const input_contractaddress = document.getElementById("contractaddress");
-        const input_abi = document.getElementById("abi");
-        const input_savename = document.getElementById("savename");
-        const input_chainid = document.getElementById("chainid");
-        const editbtn = document.querySelector("#editbtn");
-        const formbtn = document.querySelector("#formbtn");
 
         input_web3rpc.disabled = true;
         input_contractaddress.disabled = true;
@@ -85,30 +96,15 @@ const getFromLocalStorage = async () => {
 }
 
 window.addEventListener('load', async () => {
-    const connectwalletBtn = document.querySelector("#connectwallet");
-    const web3form = document.querySelector("#web3details");
-    const contract_list = document.querySelector("#contract_list");
-    const select_contract = document.querySelector("#select_contract");
-    const deletecontract = document.querySelector("#delete_contract");
-    const formbtn = document.querySelector("#formbtn");
-    const editbtn = document.querySelector("#editbtn");
-    const addnewbtn = document.querySelector("#addnewbtn");
-
-    // FORM FIELDS
-    const input_web3rpc = document.getElementById("web3rpc");
-    const input_contractaddress = document.getElementById("contractaddress");
-    const input_abi = document.getElementById("abi");
-    const input_savename = document.getElementById("savename");
-    const input_chainid = document.getElementById("chainid");
 
     contract_list.addEventListener("change", (event) => {
         event.preventDefault();
-        
+
         const cAddress = event.target.value;
         const index = getDataFromLocalStorage("index");
         const { contractsArray } = localLevel;
 
-        if(cAddress != "" && cAddress != contractsArray?.[index]) {
+        if (cAddress != "" && (cAddress != contractsArray?.[index] || input_contractaddress.value == "")) {
             select_contract.disabled = false;
         } else {
             select_contract.disabled = true;
@@ -137,7 +133,7 @@ window.addEventListener('load', async () => {
 
         const isYes = confirm("Are you sure, you want to remove?");
 
-        if(!isYes) {
+        if (!isYes) {
             return;
         }
 
@@ -265,6 +261,6 @@ window.addEventListener('load', async () => {
 
     await getFromLocalStorage();
 
-    document.querySelector("#load").style.display = "none";
-    document.querySelector("body").style.overflow = "auto";
+    docLoad.style.display = "none";
+    docBody.style.overflow = "auto";
 });
