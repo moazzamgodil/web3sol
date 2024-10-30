@@ -25,6 +25,11 @@ const formbtn = document.querySelector("#formbtn");
 const editbtn = document.querySelector("#editbtn");
 const addnewbtn = document.querySelector("#addnewbtn");
 
+const readbtn = document.querySelector("#readbtn");
+const writebtn = document.querySelector("#writebtn");
+const readtab = document.querySelector("#readtab");
+const writetab = document.querySelector("#writetab");
+
 // FORM FIELDS
 const input_web3rpc = document.getElementById("web3rpc");
 const input_contractaddress = document.getElementById("contractaddress");
@@ -196,6 +201,23 @@ window.addEventListener('load', async () => {
         editbtn.style.display = "none";
         addnewbtn.style.display = "none";
     });
+
+    readbtn.addEventListener("click", (event) => {
+        readbtn.disabled = true;
+        writebtn.disabled = false;
+
+        readtab.classList.add("activetab");
+        writetab.classList.remove("activetab");
+    });
+
+    writebtn.addEventListener("click", (event) => {
+        writebtn.disabled = true;
+        readbtn.disabled = false;
+
+        writetab.classList.add("activetab");
+        readtab.classList.remove("activetab");
+    });
+
 
     web3form.addEventListener("submit", async (event) => {
         event.preventDefault();

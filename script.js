@@ -152,7 +152,7 @@ export const connect = async (abi, chainid, rpc) => {
             userBalance = await web3.eth.getBalance(address);
             console.log("Connected: ", address)
             metamask_msg.innerHTML = address ? `Metamask Connected (${address?.substring(0, 5)}...${address?.substring(address.length - 5, address.length)}) (${Web3BigNumber(userBalance).toSmall().trimDecimalPlaces(2)} eth)` : "Required metamask for transactions. Metamask Not Connected";
-            connectwalletBtn.style.display = address ? "none" : "block";
+            connectwalletBtn.style.display = address ? "none" : "inline-block";
         });
 
         window.ethereum.on("chainChanged", () => reloadWindow());
@@ -182,7 +182,7 @@ export const connect = async (abi, chainid, rpc) => {
     } catch (error) {
         metamask_msg.innerHTML = "Required metamask for transactions. Metamask Not Connected";
         connectwalletBtn.innerText = "Connect Metamask";
-        connectwalletBtn.style.display = "block";
+        connectwalletBtn.style.display = "inline-block";
         console.log(error)
     }
 }
@@ -199,6 +199,9 @@ export const settingWeb3 = async (selectedLevel) => {
     const input_chainid = document.getElementById("chainid");
 
     const container = document.getElementById("container");
+
+    const readtab = document.getElementById("readtab");
+    const writetab = document.getElementById("writetab");
 
     const { abi, contractaddress, rpc, savename, chainid } = selectedLevel;
 
@@ -235,7 +238,15 @@ export const settingWeb3 = async (selectedLevel) => {
     const contractBalance = await web3.eth.getBalance(contractaddress);
     contract_balance.innerHTML = `Contract Balance: ${Web3BigNumber(contractBalance).toSmall().trimDecimalPlaces(2)} eth`;
 
-    const groups = abi.filter(element => element.type === 'function')
+    const abiSorted = abi.sort((a, b) => {
+        let x = a.name?.toLowerCase();
+        let y = b.name?.toLowerCase();
+        if (x < y) { return -1; }
+        if (x > y) { return 1; }
+        return 0;
+    });
+    
+    const groups = abiSorted.filter(element => element.type === 'function')
         .map(element => {
             const button = document.createElement('button');
             button.textContent = `(${element.stateMutability}) ${element.name}`;
@@ -244,6 +255,7 @@ export const settingWeb3 = async (selectedLevel) => {
 
             const group = document.createElement('div');
             group.setAttribute("class", "group");
+            group.ariaLabel = element.stateMutability === 'view' || element.stateMutability === 'pure' ? "read" : "write";
 
             const brEle = document.createElement('br');
             group.appendChild(button);
@@ -276,6 +288,11 @@ export const settingWeb3 = async (selectedLevel) => {
         });
 
     for (let i = 0; i < groups.length; i++) {
-        container.appendChild(groups[i]);
+        // container.appendChild(groups[i]);
+        if (groups[i].ariaLabel === "read") {
+            readtab.appendChild(groups[i]);
+        } else {
+            writetab.appendChild(groups[i]);
+        }
     }
 }
