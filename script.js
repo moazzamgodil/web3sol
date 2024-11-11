@@ -256,9 +256,20 @@ export const settingWeb3 = async (selectedLevel) => {
             const group = document.createElement('div');
             group.setAttribute("class", "group");
             group.ariaLabel = element.stateMutability === 'view' || element.stateMutability === 'pure' ? "read" : "write";
+            
+            const panel = document.createElement('div');
+            panel.setAttribute("class", "accordian-panel");
+            
+            const panelTitle = document.createElement('button');
+            panelTitle.setAttribute("class", "accordian-title");
+            panelTitle.textContent = `${element.name}`;
+            panelTitle.addEventListener("click", () => {
+                group.classList.toggle("activepanel")
+            })
 
             const brEle = document.createElement('br');
-            group.appendChild(button);
+            group.appendChild(panelTitle);
+            panel.appendChild(button);
 
             for (let i = 0; i < element.inputs.length; i++) {
                 const input = element.inputs[i];
@@ -267,7 +278,7 @@ export const settingWeb3 = async (selectedLevel) => {
                 inputText.setAttribute("placeholder", `${input.type} ${input.name}`);
                 inputText.setAttribute("required", "true");
                 inputText.setAttribute("class", "inputdata");
-                group.appendChild(inputText);
+                panel.appendChild(inputText);
             }
 
             if (element.stateMutability === 'payable') {
@@ -276,19 +287,19 @@ export const settingWeb3 = async (selectedLevel) => {
                 inputText.setAttribute("placeholder", `ether value (in wei)`);
                 inputText.setAttribute("required", "true");
                 inputText.setAttribute("class", "inputdata");
-                group.appendChild(inputText);
+                panel.appendChild(inputText);
             }
 
             const display = document.createElement('span');
 
-            group.appendChild(brEle);
-            group.appendChild(display);
+            panel.appendChild(brEle);
+            panel.appendChild(display);
+            group.appendChild(panel);
             return group;
 
         });
 
     for (let i = 0; i < groups.length; i++) {
-        // container.appendChild(groups[i]);
         if (groups[i].ariaLabel === "read") {
             readtab.appendChild(groups[i]);
         } else {
