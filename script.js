@@ -91,6 +91,7 @@ const handleClick = async (event, isCallFnc, isPayable) => {
         const fromData = isPayable ? { from: address, value: msgValue[0].value } : { from: address };
         await contractMethod.estimateGas(fromData);
         displaySpan.innerText = isCallFnc ? "Loading..." : "Transaction Initiated...";
+        displaySpan.classList.add("result");
 
         result = await contractMethod[isCallFnc ? "call" : "send"](fromData);
 

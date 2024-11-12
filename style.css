@@ -304,6 +304,26 @@ p.heading {
   content: "\276E";
 }
 
+.group .accordian-panel span {
+  display: block;
+}
+
+.group .accordian-panel span.result {
+  margin-top: 10px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.group .accordian-panel span {
+  display: block;
+}
+
+.group .accordian-panel span.result {
+  margin-top: 10px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
 @keyframes octocat-wave {
 
   0%,
