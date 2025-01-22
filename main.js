@@ -14,8 +14,6 @@ const localLevel = {
     contractsArray: null
 }
 
-
-
 const connectwalletBtn = document.querySelector("#connectwallet");
 const web3form = document.querySelector("#web3details");
 const contract_list = document.querySelector("#contract_list");

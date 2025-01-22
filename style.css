@@ -68,12 +68,12 @@ h3 {
 }
 
 .fieldset:nth-child(1) {
-  min-width: 40vw;
-  width: 40%;
+  min-width: 25vw;
+  width: 25%;
 }
 
 .fieldset:nth-child(2) {
-  width: 60%;
+  width: 75%;
 }
 
 .block {
@@ -108,6 +108,10 @@ select#contract_list {
   border: 1px solid black;
   width: 100%;
   max-width: 600px;
+}
+
+#web3details textarea {
+  resize: vertical;
 }
 
 input:disabled,
@@ -294,6 +298,7 @@ p.heading {
 .group.activepanel .accordian-panel {
   max-height: 500px;
   padding: 15px;
+  overflow: auto;
 }
 
 .group.activepanel .accordian-title {
@@ -309,9 +314,12 @@ p.heading {
 }
 
 .group .accordian-panel span.result {
+  max-height: 200px;
   margin-top: 10px;
   border: 1px solid black;
   padding: 10px;
+  overflow: auto;
+  word-wrap: break-word;
 }
 
 .group .accordian-panel span {

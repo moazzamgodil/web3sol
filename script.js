@@ -102,7 +102,7 @@ const handleClick = async (event, isCallFnc, isPayable) => {
 
     console.log("result: ", result);
 
-    if (result || parseInt(result) == 0 || typeof result == "boolean") {
+    if (result || parseInt(result) == 0 || typeof result == "boolean" || (typeof result == "string" && result.length == 0)) {
         delete result["__length__"];
         const res = JSON.stringify(result, null, 4);
         result = res;
@@ -114,7 +114,7 @@ const handleClick = async (event, isCallFnc, isPayable) => {
         displaySpan.style.color = "red";
         displaySpan.style.fontWeight = "bold";
     }
-    displaySpan.innerText = result || err;
+    displaySpan.innerText = result || err || "\"\"";
 }
 
 export const connect = async (abi, chainid, rpc) => {
