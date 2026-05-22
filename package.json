@@ -11,6 +11,9 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
+    "@reown/appkit": "^1.8.20",
+    "@reown/appkit-adapter-ethers5": "^1.8.20",
+    "ethers": "^5.8.0",
     "web3": "^4.9.0",
     "web3-bignumber": "^0.1.2",
     "web3-errors-extract": "^0.2.2"

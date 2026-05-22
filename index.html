@@ -24,20 +24,21 @@
 				fill="currentColor" class="octo-body"></path>
 		</svg></a>
 
-	<div>
+	<div class="app-shell">
 		<div class="container-1">
 			<h1>Function Calls from EVM based smart contract</h1>
-			<h4 id="metamask_msg">Required metamask for transactions</h4>
-			<button class="blackbtn" id="connectwallet" style="width: auto;">Connect
-				Metamask</button>
+			<h4 id="wallet_msg" style="display: none;">Required wallet</h4>
+			<div class="wallet-actions">
+				<button class="blackbtn" id="connectwallet" style="width: auto;">Connect
+					Wallet</button>
+				<button class="blackbtn" id="wallet_switch_btn" style="display: none; width: auto;">Switch
+					Network</button>
+			</div>
 			<p id="network_id" style="font-weight: bold; margin-bottom: 15px;"></p>
 
 			<div id="contract_list_div">
-				<label for="contract_list">Select Saved Contracts</label><br>
 				<div>
-					<select id="contract_list"></select>
-					<button class="blackbtn" id="select_contract" style="display: none;" disabled>Select</button>
-					<button class="blackbtn" id="delete_contract" style="display: none;">Remove</button>
+					<button class="blackbtn" id="open_contract_modal" style="width: auto;">View Saved Contracts</button>
 				</div>
 			</div>
 		</div>
@@ -49,16 +50,13 @@
 				<div class="block">
 					<form id="web3details" method="post">
 						<div>
-							<label for="web3rpc">Network RPC (Required if no wallet available) <a target="_blank"
-									href="https://chainlist.org/?testnets=true">Check here -></a></label>
-							<input type="text" name="web3rpc" id="web3rpc"
-								placeholder="https://ethereum-rpc.publicnode.com">
-							<p id="rpc-error" style="color: red; font-size: 12px; font-weight: bold; display: none;">
-								Non-Ethereum browser detected. Please provide RPC.</p>
-						</div>
-						<div>
 							<label for="chainid">Chain ID / Network ID</label>
-							<input type="text" name="chainid" id="chainid" placeholder="1">
+							<div id="chain-dropdown" class="chain-dropdown">
+								<input type="text" id="chain-search" placeholder="Search network by name or chain id"
+									autocomplete="off">
+								<div id="chain-options" class="chain-options"></div>
+							</div>
+							<input type="hidden" name="chainid" id="chainid">
 							<p id="chain-error" style="color: red; font-size: 12px; font-weight: bold; display: none;">
 								Wrong network connected. <span id="switch-network"
 									style="text-decoration: underline; font-weight: bold; cursor: pointer;">Switch
@@ -87,12 +85,12 @@
 			<div class="fieldset">
 				<h3>Functions Calls</h3>
 				<div id="container" class="block">
-					<p class="heading">Type</p>
+					<!-- <p class="heading">Type</p>
 					<ul>
 						<li>nonpayable -> Send Function without passing native token or msg.value</li>
 						<li>payable -> Send Function with native token or msg.value</li>
 						<li>view | pure -> Call Function</li>
-					</ul>
+					</ul> -->
 					<p id="contract_balance" style="margin-bottom: 20px; font-weight: bold;"></p>
 					<div style="display: inline-block; margin-bottom: 5px;">
 						<button id="readbtn" class="blackbtn" disabled>Read</button>
@@ -106,6 +104,15 @@
 		<p class="foot"><span style="font-weight: bold;"><a href="https://mgdev.surge.sh" target="_blank">MG</a></span>
 			- <a href="https://github.com/moazzamgodil" target="_blank">Github</a> - <a
 				href="https://www.linkedin.com/in/moazzamgodil" target="_blank">Linkedin</a></p>
+	</div>
+	<div id="contract_modal" class="modal-overlay" style="display: none;">
+		<div class="modal-card">
+			<div class="modal-head">
+				<h3>Saved Contracts</h3>
+				<button id="close_contract_modal" class="blackbtn modal-close">Close</button>
+			</div>
+			<div id="contract_modal_list" class="modal-list"></div>
+		</div>
 	</div>
 </body>
 

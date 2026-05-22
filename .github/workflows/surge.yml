@@ -3,14 +3,17 @@ name: Deploy Website
 on: [push]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     name: Deploying to surge
     
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - run: npm install -g surge
       - run: surge ./dist ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
